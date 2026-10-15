@@ -1,4 +1,4 @@
-from pydantic import BaseModel,EmailStr,Field
+from pydantic import BaseModel,EmailStr,Field,ConfigDict
 from datetime import datetime
 from typing import Optional,Annotated
 
@@ -16,6 +16,7 @@ class UserOut(BaseModel):
     id:int
     email:EmailStr
     created_at:datetime
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Post(PostBase):
@@ -23,26 +24,18 @@ class Post(PostBase):
     created_at:datetime
     owner_id:int
     owner:UserOut
-
-    class Config:
-        orm_mode=True
+    model_config = ConfigDict(from_attributes=True)
 
 class PostOut(BaseModel):
      Post:Post
      votes:int
-     class Config:
-        from_attributes = True
+     model_config = ConfigDict(from_attributes=True)
 
 #------------------------Users-----------------------------------
 
 class UserCreate(BaseModel):
     email:EmailStr
     password:str
-
-
-
-    class Config:
-            orm_mode=True
 
 
 #--------------------------User Login-----------------------------

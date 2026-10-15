@@ -40,7 +40,7 @@ def createposts(post:schemas.PostCreate,db: Session=Depends(get_db),current_user
 
     #new_post=models.Post(title=post.title,content=post.content,published=post.published)
     
-    new_post=models.Post(owner_id=current_user.id,**post.dict()) #we are unpacking the dictionary it will automatically do like above comment but dynamically
+    new_post=models.Post(owner_id=current_user.id,**post.model_dump()) #we are unpacking the dictionary it will automatically do like above comment but dynamically
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -110,7 +110,7 @@ def update_posts(id: int, updated_post: schemas.PostCreate,db: Session=Depends(g
     if post.owner_id !=current_user.id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                                 detail=f"Not Authorised to perform the requested action")
-    post_query.update(updated_post.dict(),synchronize_session=False)
+    post_query.update(updated_post.model_dump(),synchronize_session=False)
     db.commit()
 
     return post_query.first()
