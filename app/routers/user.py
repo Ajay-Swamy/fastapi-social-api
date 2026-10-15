@@ -14,7 +14,7 @@ router=APIRouter(
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate,db: Session=Depends(get_db)):
 
-    existing_user=db.query(models.User).filter(models.User.email==user.email)
+    existing_user=db.query(models.User).filter(models.User.email==user.email).first()
     if existing_user:
              return HTTPException(status_code=status.HTTP_409_CONFLICT,detail=f"duplicate entry")
 
