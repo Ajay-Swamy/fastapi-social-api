@@ -8,7 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # models.Base.metadata.create_all(bind=engine)
 
-app=FastAPI()
+app = FastAPI(
+    title="Social Media API",
+    description="REST API with JWT authentication, posts, votes, search and pagination.",
+    version="1.0.0",
+)
 
 origins=["*"]
 app.add_middleware(
