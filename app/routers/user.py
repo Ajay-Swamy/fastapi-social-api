@@ -14,12 +14,14 @@ router=APIRouter(
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate,db: Session=Depends(get_db)):
 
+    existing_user=db.query(models.User).filter(models.User.email==user.email)
+    if existing_user:
+             return HTTPException(status_code=status.HTTP_409_CONFLICT,detail=f"duplicate entry")
+
     # now we will hash the password to make it secure
     hashed_password=utils.hash(user.password)
     user.password=hashed_password
     new_user=models.User(**user.model_dump())
-    if new_user in db:
-         return HTTPException(status_code=status.HTTP_409_CONFLICT,detail=f"duplicate entry")
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
