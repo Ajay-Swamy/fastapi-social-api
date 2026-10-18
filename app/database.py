@@ -2,14 +2,25 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
 from sqlalchemy.orm import Session
 from .config import settings
-SQLALCHEMY_DATABASE_URL=f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
+from sqlalchemy.engine import URL
 
-engine=create_engine(SQLALCHEMY_DATABASE_URL)
+## SQLALCHEMY_DATABASE_URL=f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
+
+SQLALCHEMY_DATABASE_URL = URL.create(
+    drivername="postgresql",
+    username=settings.database_username,
+    password=settings.database_password,
+    host=settings.database_hostname,
+    port=int(settings.database_port),
+    database=settings.database_name,
+)
+
+engine=create_engine(SQLALCHEMY_DATABASE_URL,
+                     pool_pre_ping=True,
+                     connect_args={"sslmode":settings.database_sslmode},
+                     )
 
 SessionLocal=sessionmaker(autocommit=False,autoflush=False,bind=engine)
 

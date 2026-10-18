@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+from sqlalchemy.engine import URL
 from alembic import context
 from app.models import Base
 from app.config import settings
@@ -10,9 +10,18 @@ from app.config import settings
 # access to the values within the .ini file in use.
 config = context.config
 
+db_url = URL.create(
+    drivername="postgresql+psycopg2",
+    username=settings.database_username,
+    password=settings.database_password,
+    host=settings.database_hostname,
+    port=int(settings.database_port),
+    database=settings.database_name,
+    query={"sslmode": settings.database_sslmode},
+)
 config.set_main_option(
     "sqlalchemy.url",
-    f'postgresql+psycopg2://{settings.database_username}:{settings.database_password}@{settings.database_hostname}/{settings.database_name}'
+    db_url.render_as_string(hide_password=False).replace("%", "%%"),
 )
 
 
