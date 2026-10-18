@@ -2,7 +2,8 @@
 
 A REST API built with **FastAPI** and **PostgreSQL** where users can sign up, log in, create posts and vote on posts. It uses JWT authentication, database migrations, automated tests and Docker.
 
-**Live API docs:** _add your deployed link here, e.g. `https://your-app.onrender.com/docs`_
+**Live API docs:** https://fastapi-social-api-x0fy.onrender.com/docs
+> Hosted on a free tier, so the first request after a period of inactivity can take up to a minute.
 
 ![Swagger UI](docs/swagger.png)
 
